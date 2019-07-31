@@ -5,7 +5,7 @@ import com.google.common.io.BaseEncoding
 import java.math.BigInteger
 import kotlin.random.Random
 
-const val primeCertainty = 5
+const val primeCertainty = 40
 
 private val sha256 = Hashing.sha256()
 private val HEX = BaseEncoding.base16().lowerCase()
