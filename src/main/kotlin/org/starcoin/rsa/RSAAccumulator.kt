@@ -3,6 +3,9 @@ package org.starcoin.rsa
 import java.math.BigInteger
 import kotlin.random.Random
 
+typealias RSAProof = TwoValue<BigInteger>
+typealias RSACommit = BigInteger
+
 // Using the RSA-2048 challenge modulus.
 // The factors and group order, equivalent to the private key, are believed to be unknown!
 // https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048
@@ -21,13 +24,12 @@ class RSAAccumulator {
         fun verifyMembership(
             A: BigInteger,
             x: BigInteger,
-            nonce: BigInteger,
-            proof: BigInteger,
+            proof: TwoValue<BigInteger>
         ): Boolean {
-            return this.doVerifyMembership(A, hashToPrime(x, ACCUMULATED_PRIME_SIZE, nonce).first, proof, n)
+            return this.doVerifyMembership(A, hashToPrime(x, ACCUMULATED_PRIME_SIZE, proof.second).first, proof.first)
         }
 
-        private fun doVerifyMembership(A: BigInteger, x: BigInteger, proof: BigInteger, n: BigInteger): Boolean {
+        private fun doVerifyMembership(A: BigInteger, x: BigInteger, proof: BigInteger): Boolean {
             return proof.modPow(x, n) == A
         }
     }
@@ -45,15 +47,11 @@ class RSAAccumulator {
         A = A0
     }
 
-    fun getNonce(x: BigInteger): BigInteger {
+    private fun getNonce(x: BigInteger): BigInteger {
         return data.getValue(x)
     }
 
-    fun getNonceOrNull(x: BigInteger): BigInteger? {
-        return data[x]
-    }
-
-    fun add(x: BigInteger): BigInteger {
+    fun add(x: BigInteger): RSACommit {
         return if (data.containsKey(x)) {
             A
         } else {
@@ -64,11 +62,11 @@ class RSAAccumulator {
         }
     }
 
-    fun proveMembership(x: BigInteger): BigInteger {
+    fun proveMembership(x: BigInteger): RSAProof {
         return this.proveMembershipOrNull(x) ?: throw NoSuchElementException("Can not find member $x")
     }
 
-    fun proveMembershipOrNull(x: BigInteger): BigInteger? {
+    fun proveMembershipOrNull(x: BigInteger): RSAProof? {
         return if (!data.containsKey(x)) {
             null
         } else {
@@ -78,11 +76,11 @@ class RSAAccumulator {
                     product *= hashToPrime(k, ACCUMULATED_PRIME_SIZE, v).first
                 }
             }
-            A0.modPow(product, n)
+            TwoValue(A0.modPow(product, n), getNonce(x))
         }
     }
 
-    fun delete(x: BigInteger): BigInteger {
+    fun delete(x: BigInteger): RSACommit {
         return if (!data.containsKey(x)) {
             A
         } else {
