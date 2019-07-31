@@ -3,6 +3,7 @@ package org.starcoin.rsa
 import com.google.common.hash.Hashing
 import com.google.common.io.BaseEncoding
 import java.math.BigInteger
+import java.security.SecureRandom
 import kotlin.random.Random
 
 const val primeCertainty = 40
@@ -21,7 +22,7 @@ fun Random.nextBigInteger(from: BigInteger, until: BigInteger): BigInteger {
         from.bitLength(),
         until.bitLength()
     )
-    val random = java.util.Random()
+    val random = SecureRandom()
     do {
         randomNumber = BigInteger(bitLength, random)
     } while (randomNumber < from || randomNumber >= until)
