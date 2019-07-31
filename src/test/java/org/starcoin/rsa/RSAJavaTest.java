@@ -13,11 +13,10 @@ public class RSAJavaTest {
         RSAAccumulator accumulator = new RSAAccumulator();
         BigInteger x0 = new BigInteger(Random.Default.nextBytes(128));
         BigInteger A1 = accumulator.add(x0);
-        BigInteger nonce0 = accumulator.getNonce(x0);
-        BigInteger proof0 = accumulator.proveMembership(x0);
+        TwoValue<BigInteger> proof0 = accumulator.proveMembership(x0);
 
         Assert.assertEquals(accumulator.getSize(), 1);
-        Assert.assertEquals(accumulator.getA0(), proof0);
-        Assert.assertTrue(RSAAccumulator.verifyMembership(A1, x0, nonce0, proof0, accumulator.getN()));
+        Assert.assertEquals(accumulator.getA0(), proof0.getFirst());
+        Assert.assertTrue(RSAAccumulator.verifyMembership(A1, x0, proof0));
     }
 }

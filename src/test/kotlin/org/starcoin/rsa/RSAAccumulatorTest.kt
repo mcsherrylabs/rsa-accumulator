@@ -11,37 +11,34 @@ class RSAAccumulatorTest {
     fun testAddAndProve() {
         // first addition
         val accumulator = RSAAccumulator()
-        val x0 = Random.nextBigInteger()
         val x1 = Random.nextBigInteger()
+        val x2 = Random.nextBigInteger()
 
-        val A1 = accumulator.add(x0)
-        val nonce0 = accumulator.getNonce(x0)
-
-        val proof0 = accumulator.proveMembership(x0)
+        val commit1 = accumulator.add(x1)
+        val proof1 = accumulator.proveMembership(x1)
 
         Assert.assertEquals(accumulator.size, 1)
-        Assert.assertEquals(accumulator.A0, proof0)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(A1, x0, nonce0, proof0, accumulator.n))
+        Assert.assertEquals(accumulator.A0, proof1.first)
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit1, x1, proof1))
 
         // second addition
 
-        val A2 = accumulator.add(x1)
-        val nonce1 = accumulator.getNonce(x1)
-
-        val proof1 = accumulator.proveMembership(x1)
+        val commit2 = accumulator.add(x2)
+        val proof2 = accumulator.proveMembership(x2)
 
         Assert.assertEquals(accumulator.size, 2)
-        Assert.assertEquals(A1, proof1)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(A2, x1, nonce1, proof1, accumulator.n))
+        Assert.assertEquals(commit1, proof2.first)
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit2, x2, proof2))
 
         // delete
-        val A3 = accumulator.delete(x0)
-        val proof2 = accumulator.proveMembership(x1)
-        val proofNone = accumulator.proveMembershipOrNull(x0)
+        val commit3 = accumulator.delete(x1)
+        val proof3 = accumulator.proveMembership(x2)
+        val proofNone = accumulator.proveMembershipOrNull(x1)
 
         Assert.assertEquals(accumulator.size, 1)
         Assert.assertNull(proofNone)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(A3, x1, nonce1, proof2, accumulator.n))
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit3, x2, proof3))
+
     }
 
 }
