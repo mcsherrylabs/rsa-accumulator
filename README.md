@@ -6,6 +6,7 @@ Generating and verifying proofs in Kotlin, also can be used in java project.<br>
 
 ### References
 
+* [RSA-2048] [RSA-2048 factored number](https://en.wikipedia.org/wiki/RSA_numbers#RSA-2048) The challenge modulus used.
 * [RSA-accumulator] [RSA-accumulator python](https://github.com/oleiba/RSA-accumulator) Kotlin version is mainly implemented with reference to python version.
 * [Bd94] [One-way accumulators: A decentralized
 alternative to digital sinatures](https://link.springer.com/content/pdf/10.1007/3-540-48285-7_24.pdf), Josh Cohen Benaloh and Michael de Mare. 
