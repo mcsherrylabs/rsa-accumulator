@@ -32,22 +32,7 @@ fun Random.nextBigInteger(until: BigInteger) = this.nextBigInteger(BigInteger.ZE
 
 fun Random.nextBigInteger() = this.nextBigInteger(2.toBigInteger().pow(256))
 
-fun generateLargePrime(bitLength: Int): BigInteger {
-    val random = java.util.Random()
-    return BigInteger.probablePrime(bitLength, random)
-}
-
 data class TwoValue<T>(val first: T, val second: T)
-
-fun generateTwoLargeDistinctPrimes(bitLength: Int): TwoValue<BigInteger> {
-    val first = generateLargePrime(bitLength)
-    while (true) {
-        val second = generateLargePrime(bitLength)
-        if (first != second) {
-            return TwoValue(first, second)
-        }
-    }
-}
 
 fun hashToPrime(x: BigInteger, bitLength: Int = 120, initNonce: BigInteger = BigInteger.ZERO): TwoValue<BigInteger> {
     var nonce = initNonce
