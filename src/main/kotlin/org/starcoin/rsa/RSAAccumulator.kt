@@ -22,11 +22,10 @@ class RSAAccumulator {
 
         @JvmStatic
         fun verifyMembership(
-            A: BigInteger,
-            x: BigInteger,
+            commitment: BigInteger,
             proof: TwoValue<BigInteger>
         ): Boolean {
-            return this.doVerifyMembership(A, hashToPrime(x, ACCUMULATED_PRIME_SIZE, proof.second).first, proof.first)
+            return this.doVerifyMembership(commitment, proof.second, proof.first)
         }
 
         private fun doVerifyMembership(A: BigInteger, x: BigInteger, proof: BigInteger): Boolean {
@@ -76,7 +75,7 @@ class RSAAccumulator {
                     product *= hashToPrime(k, ACCUMULATED_PRIME_SIZE, v).first
                 }
             }
-            TwoValue(A0.modPow(product, n), getNonce(x))
+            RSAProof(A0.modPow(product, n), hashToPrime(x, ACCUMULATED_PRIME_SIZE, getNonce(x)).first)
         }
     }
 

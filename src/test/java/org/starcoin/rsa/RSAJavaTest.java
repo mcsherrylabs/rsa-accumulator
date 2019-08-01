@@ -17,6 +17,6 @@ public class RSAJavaTest {
 
         Assert.assertEquals(accumulator.getSize(), 1);
         Assert.assertEquals(accumulator.getA0(), proof0.getFirst());
-        Assert.assertTrue(RSAAccumulator.verifyMembership(A1, x0, proof0));
+        Assert.assertTrue(RSAAccumulator.verifyMembership(A1, proof0));
     }
 }

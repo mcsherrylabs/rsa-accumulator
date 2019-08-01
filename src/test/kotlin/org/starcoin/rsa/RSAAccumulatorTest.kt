@@ -19,7 +19,7 @@ class RSAAccumulatorTest {
 
         Assert.assertEquals(accumulator.size, 1)
         Assert.assertEquals(accumulator.A0, proof1.first)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(commit1, x1, proof1))
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit1, proof1))
 
         // second addition
 
@@ -28,7 +28,7 @@ class RSAAccumulatorTest {
 
         Assert.assertEquals(accumulator.size, 2)
         Assert.assertEquals(commit1, proof2.first)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(commit2, x2, proof2))
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit2, proof2))
 
         // delete
         val commit3 = accumulator.delete(x1)
@@ -37,7 +37,7 @@ class RSAAccumulatorTest {
 
         Assert.assertEquals(accumulator.size, 1)
         Assert.assertNull(proofNone)
-        Assert.assertTrue(RSAAccumulator.verifyMembership(commit3, x2, proof3))
+        Assert.assertTrue(RSAAccumulator.verifyMembership(commit3, proof3))
 
     }
 
