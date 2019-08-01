@@ -34,7 +34,9 @@ class RSAAccumulator {
     }
 
     val A0: BigInteger
-    private var A: BigInteger
+    var commitment: RSACommit
+        private set
+
     private val data = mutableMapOf<BigInteger, BigInteger>()
 
     val size: Int
@@ -43,7 +45,7 @@ class RSAAccumulator {
     init {
         // draw random number within range of [0,n-1]
         A0 = Random.nextBigInteger(BigInteger.ZERO, n)
-        A = A0
+        commitment = A0
     }
 
     private fun getNonce(x: BigInteger): BigInteger {
@@ -52,12 +54,12 @@ class RSAAccumulator {
 
     fun add(x: BigInteger): RSACommit {
         return if (data.containsKey(x)) {
-            A
+            commitment
         } else {
             val (hashPrime, nonce) = hashToPrime(x, ACCUMULATED_PRIME_SIZE)
-            A = A.modPow(hashPrime, n)
+            commitment = commitment.modPow(hashPrime, n)
             data[x] = nonce
-            A
+            commitment
         }
     }
 
@@ -81,7 +83,7 @@ class RSAAccumulator {
 
     fun delete(x: BigInteger): RSACommit {
         return if (!data.containsKey(x)) {
-            A
+            commitment
         } else {
             data.remove(x)
             var product = BigInteger.ONE
@@ -90,8 +92,8 @@ class RSAAccumulator {
                     product *= hashToPrime(k, ACCUMULATED_PRIME_SIZE, v).first
                 }
             }
-            this.A = A0.modPow(product, n)
-            A
+            this.commitment = A0.modPow(product, n)
+            commitment
         }
     }
 
