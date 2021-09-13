@@ -30,6 +30,12 @@ class RSAAccumulatorTest {
         Assert.assertEquals(commit1, proof2.first)
         Assert.assertTrue(RSAAccumulator.verifyMembership(commit2, proof2))
 
+        // verify that first addition is still provable after second addition
+        Assert.assertTrue(RSAAccumulator.verifyMembership(
+            commit2,
+            accumulator.proveMembership(x1))
+        )
+
         // delete
         val commit3 = accumulator.delete(x1)
         val proof3 = accumulator.proveMembership(x2)
